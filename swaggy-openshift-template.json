@@ -1,152 +1,138 @@
 {
-  "kind": "Template",
-  "apiVersion": "v1",
-  "metadata": {
-    "name": "swaggy-test-template",
-    "annotations": {
-      "description": "OpSh Template for swaggy test",
-      "tags": "template-tag"
-    }
-  },
-  "labels": {
-    "template": "swaggy-test"
-  },
-  "objects": [
-    {
-      "kind": "Service",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${SERVICE_NAME}",
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "swaggy-test-template",
         "annotations": {
-          "description": "service description"
+            "description": "OpSh Template for swaggy test",
+            "tags": "swaggy"
         }
-      },
-      "spec": {
-        "ports": [
-          {
-            "name": "web",
-            "port": 8080,
-            "targetPort": 8080
-          }
-        ],
-        "selector": {
-          "name": "${SERVICE_NAME}"
-        }
-      }
     },
-    {
-      "kind": "Route",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${SERVICE_NAME}"
-      },
-      "spec": {
-        "host": "${APPLICATION_DOMAIN}",
-        "path": "/${SERVICE_NAME}",
-        "to": {
-          "kind": "Service",
-          "name": "${SERVICE_NAME}"
-        }
-      }
+    "labels": {
+        "template": "swaggy-test"
     },
-    {
-      "kind": "DeploymentConfig",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${SERVICE_NAME}",
-        "annotations": {
-          "description": "deployment description"
-        }
-      },
-      "spec": {
-        "replicas": 1,
-        "nodeSelector": {
-          "region": "node"
-        },
-        "selector": {
-          "name": "${SERVICE_NAME}"
-        },
-        "triggers": [{
-            "type": "ConfigChange"
-        }],
-        "template": {
-          "metadata": {
+    "objects": [{
+        "kind": "Service",
+        "apiVersion": "v1",
+        "metadata": {
             "name": "${SERVICE_NAME}",
-            "labels": {
-              "name": "${SERVICE_NAME}"
+            "annotations": {
+                "description": "service description"
             }
-          },
-          "spec": {
-            "containers": [
-              {
-                "name": "${SERVICE_NAME}",
-                "image": "${DOCKER_REGISTRY_URI}/${SERVICE_NAME}:latest",
-                "ports": [
-                  {
-                    "containerPort": 8080
-                  }
-                ],
-                "readinessProbe": {
-                  "timeoutSeconds": 30,
-                  "initialDelaySeconds": 60,
-                  "httpGet": {
-                    "path": "/${SERVICE_NAME}/health",
-                    "port": 8080
-                  }
-                },
-                "livenessProbe": {
-                  "timeoutSeconds": 30,
-                  "initialDelaySeconds": 180,
-                  "httpGet": {
-                    "path": "/${SERVICE_NAME}/health",
-                    "port": 8080
-                  }
-                },
-                "env": [
-                  {
-                    "name": "DOCKER_HOST_IP",
-                    "value": "${APPLICATION_DOMAIN}"
-                  },
-                  {
-                    "name": "AWS_ACCESS_KEY_ID",
-                    "value": "${AWS_ACCESS_KEY_ID}"
-                  },
-                  {
-                    "name": "AWS_SECRET_ACCESS_KEY",
-                    "value": "${AWS_SECRET_ACCESS_KEY}"
-                  }
-                ]
-              }
-            ]
-          }
+        },
+        "spec": {
+            "ports": [{
+                "name": "web",
+                "port": 8080,
+                "targetPort": 8080
+            }],
+            "selector": {
+                "name": "${SERVICE_NAME}"
+            }
         }
-      }
-    },
-  ],
-  "parameters": [
-    {
-      "name": "SERVICE_NAME",
-      "displayName": "DisplayName",
-      "required": true,
-      "value": "swaggy-test"
-    },
-    {
-      "name": "AWS_ACCESS_KEY_ID",
-      "displayName": "The AWS access key id",
-      "required": true,
-      "value": "AKIAJD5PYQYDZNMWYYLA"
-    },
-    {
-      "name": "AWS_SECRET_ACCESS_KEY",
-      "displayName": "The AWS access key secret",
-      "required": true,
-      "value": "4PSIMLKWEECComysHePFMNuqVCErymO4Al4/aiEh"
-    },
-    {
-      "name": "DOCKER_REGISTRY_URI",
-      "displayName": "The location of the docker registry",
-      "required": true,
-      "value": "433455360279.dkr.ecr.us-east-1.amazonaws.com"
-    }
-  ]
+    }, {
+        "kind": "Route",
+        "apiVersion": "v1",
+        "metadata": {
+            "name": "${SERVICE_NAME}"
+        },
+        "spec": {
+            "host": "${APPLICATION_DOMAIN}",
+            "path": "/${SERVICE_NAME}",
+            "to": {
+                "kind": "Service",
+                "name": "${SERVICE_NAME}"
+            }
+        }
+    }, {
+        "kind": "DeploymentConfig",
+        "apiVersion": "v1",
+        "metadata": {
+            "name": "${SERVICE_NAME}",
+            "annotations": {
+                "description": "deployment description"
+            }
+        },
+        "spec": {
+            "replicas": 1,
+            "nodeSelector": {
+                "region": "node"
+            },
+            "selector": {
+                "name": "${SERVICE_NAME}"
+            },
+            "triggers": [{
+                "type": "ConfigChange"
+            }],
+            "template": {
+                "metadata": {
+                    "name": "${SERVICE_NAME}",
+                    "labels": {
+                        "name": "${SERVICE_NAME}"
+                    }
+                },
+                "spec": {
+                    "containers": [{
+                        "name": "${SERVICE_NAME}",
+                        "image": "${DOCKER_REGISTRY_URI}/${SERVICE_NAME}:latest",
+                        "ports": [{
+                            "containerPort": 8080
+                        }],
+                        "readinessProbe": {
+                            "timeoutSeconds": 30,
+                            "initialDelaySeconds": 60,
+                            "httpGet": {
+                                "path": "/${SERVICE_NAME}/health",
+                                "port": 8080
+                            }
+                        },
+                        "livenessProbe": {
+                            "timeoutSeconds": 30,
+                            "initialDelaySeconds": 180,
+                            "httpGet": {
+                                "path": "/${SERVICE_NAME}/health",
+                                "port": 8080
+                            }
+                        },
+                        "env": [{
+                            "name": "DOCKER_HOST_IP",
+                            "value": "${APPLICATION_DOMAIN}"
+                        }, {
+                            "name": "AWS_ACCESS_KEY_ID",
+                            "value": "${AWS_ACCESS_KEY_ID}"
+                        }, {
+                            "name": "AWS_SECRET_ACCESS_KEY",
+                            "value": "${AWS_SECRET_ACCESS_KEY}"
+                        }]
+                    }]
+                }
+            }
+        }
+    }],
+    "parameters": [{
+        "name": "APPLICATION_DOMAIN",
+        "displayName": "Application Hostname",
+        "description": "The exposed hostname that will route to the services, if left blank a value will be defaulted.",
+        "value": "o2.cloudapps.rbtcloud.com"
+    }, {
+        "name": "SERVICE_NAME",
+        "displayName": "DisplayName",
+        "required": true,
+        "value": "swaggy-test"
+    }, {
+        "name": "AWS_ACCESS_KEY_ID",
+        "displayName": "The AWS access key id",
+        "required": true,
+        "value": "AKIAJIXVIUY4NBGQ6SZA"
+    }, {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "displayName": "The AWS access key secret",
+        "required": true,
+        "value": "FSe7x9bncSSMIz304Bg1whHBiCdAZ8RGbxJBsFzZ"
+    }, {
+        "name": "DOCKER_REGISTRY_URI",
+        "displayName": "The location of the docker registry",
+        "required": true,
+        "value": "433455360279.dkr.ecr.us-east-1.amazonaws.com"
+    }]
 }
