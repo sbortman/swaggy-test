@@ -12,8 +12,8 @@
 
 export AWS_ACCOUNT_ID="433455360279"
 export AWS_DEFAULT_REGION="us-east-1"
-export AWS_ACCESS_KEY_ID="AKIAIOC3FXMG6UCXZAGQ"
-export AWS_SECRET_ACCESS_KEY="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"
+export AWS_ACCESS_KEY_ID="AKIAJIXVIUY4NBGQ6SZA"
+export AWS_SECRET_ACCESS_KEY="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"
 export DOCKER_REGISTRY_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
 
 # Create login credentials for docker
@@ -41,21 +41,18 @@ fi
 ./gradlew build
 if [ $? -ne 0 ]; then
   echo; echo "Error encountered while performing gradlew build in $PWD"
-  popd
   exit 1
 fi
 
-docker build -t swaggy-test:latest .
+docker build -t ${DOCKER_REGISTRY_URI}/swaggy-test .
 if [ $? -ne 0 ]; then
   echo; echo "ERROR: Building container image"
-  popd
   exit 1
 fi
 
-docker push ${DOCKER_REGISTRY_URI}/swaggy-test:latest
+docker push ${DOCKER_REGISTRY_URI}/swaggy-test
 if [ $? -ne 0 ]; then
   echo; echo "ERROR: Pushing container image"
-  popd
   exit 1
 fi
 
