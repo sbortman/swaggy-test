@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: swaggy-test
+  cloud:
+    config:
+      enabled: false
+      uri: http://localhost:8888
+    discovery:
+      enabled: false
+---
+spring:
+  profiles: production
+  cloud:
+    config:
+      uri: http://omar-config-server:8888/omar-config-server
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://omar-eureka-server:8761/omar-eureka-server/eureka/
+
+endpoints:
+  enabled: true
+  jmx:
+    enabled: true
+  health:
+    enabled: true
